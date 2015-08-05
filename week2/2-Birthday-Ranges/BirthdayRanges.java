@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Vector;
 
 public class BirthdayRanges {
@@ -67,21 +69,25 @@ public class BirthdayRanges {
     }
 
     public static void main(String[] args) {
-        List<Integer> birthdays = new Vector<Integer>();
-        List<Pair> ranges = new Vector<Pair>();
-        ranges.add(new Pair(4, 9));
-        ranges.add(new Pair(6, 7));
-        ranges.add(new Pair(200, 225));
-        ranges.add(new Pair(300, 365));
+        Scanner scanner = new Scanner(System.in);
+        int peopleCount = scanner.nextInt(), rangesCount = scanner.nextInt();
+        List<Integer> birthdays = new ArrayList<Integer>();;
+        List<Pair> ranges = new ArrayList<Pair>();;
 
-        List<Integer> result = new Vector<Integer>();
-        Collections.addAll(birthdays, 5, 10, 6, 7, 3, 4, 5, 11, 21, 300, 15);
-
-        result = birthdaysCount(birthdays, ranges);
-        for (int i = 0; i < result.size(); i++) {
-            System.out.println(result.get(i));
+        for (int i = 0; i < peopleCount; ++i) {
+            birthdays.add(scanner.nextInt());
         }
 
-    }
+        for (int i = 0; i < rangesCount; ++i) {
+            ranges.add(new Pair(scanner.nextInt(), scanner.nextInt()));
+        }
 
+        scanner.close();
+
+        List<Integer> result = birthdaysCount(birthdays, ranges);
+
+        for (Integer integer : result) {
+            System.out.println(integer);
+        }
+    }
 }
