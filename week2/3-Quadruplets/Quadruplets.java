@@ -1,54 +1,99 @@
 import java.util.Arrays;
-import java.util.List;
-
-import com.sun.corba.se.spi.extension.ZeroPortPolicy;
+import java.util.Scanner;
 
 public class Quadruplets {
-    
-    public static boolean binarySearch(int[] array, int key) {
-        int start = 0;
-        int end = array.length - 1;
 
-        while (end >= start) {
-            int middle = (start + end) / 2;
-            if (array[middle] == key) {
-                return true;
-            }
-            if (array[middle] < key) {
-                start = middle + 1;
-            }
-            if (array[middle] > key) {
-                end = middle - 1;
-            }
-        }
-        return false;
-    }
-    
     // Returns the number of quadruplets that sum to zero.
-    public static int zeroQuadrupletsCount(int[] a, int[] b, int[] c, int[] d) {
-        int counter=0;
-        int n = a.length;
-        int sum=0;
-        Arrays.sort(d);
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                for (int p = 0; p < n; p++) {
-                    sum = a[i]+b[j]+c[p];
-                    
-                    if (binarySearch(d,-sum)) {
-                        counter++;
-                    }
-                }
-                
-            }
+    public int zeroQuadrupletsCount(int[] a, int[] b, int[] c, int[] d) {
+
+        int[] p1 = permutationSum(a, b);
+        int[] p2 = permutationSum(c, d);
+
+        Arrays.sort(p2);
+
+        int zeroSumCount = 0;
+
+        for (int i = 0; i < p1.length; i++) {
+            int lowerBoundIndex = binarySearch(p2, p1[i] * -1);
+            int upperBoundIndex = binarySearch(p2, p1[i] * -1 + 1);
+
+            zeroSumCount += upperBoundIndex - lowerBoundIndex;
         }
-               
-        return counter;
+
+        return zeroSumCount;
     }
 
     public static void main(String[] args) {
-        int result = zeroQuadrupletsCount(new int[]{5,3,4}, new int[]{-2,-1,6}, new int[]{-1,-2,4}, new int[]{-1,-2,7});
-        System.out.println(result);
+        Quadruplets q = new Quadruplets();
+
+        Scanner s = new Scanner(System.in);
+
+        Integer n = Integer.parseInt(s.next());
+
+        int[] a = new int[n];
+        int[] b = new int[n];
+        int[] c = new int[n];
+        int[] d = new int[n];
+
+        for (int j = 0; j < n; j++) {
+            a[j] = Integer.parseInt(s.next());
+        }
+        for (int j = 0; j < n; j++) {
+            b[j] = Integer.parseInt(s.next());
+        }
+
+        for (int j = 0; j < n; j++) {
+            c[j] = Integer.parseInt(s.next());
+        }
+
+        for (int j = 0; j < n; j++) {
+            d[j] = Integer.parseInt(s.next());
+        }
+
+        System.out.println(q.zeroQuadrupletsCount(a, b, c, d));
     }
 
+    private int[] permutationSum(int[] a, int[] b) {
+
+        int[] permutations = new int[a.length * a.length];
+        int index = 0;
+
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < b.length; j++) {
+                permutations[index] = a[i] + b[j];
+                index++;
+            }
+        }
+
+        return permutations;
+    }
+
+    private int binarySearch(int[] arr, int number) {
+
+        int searchedIndex = -1;
+
+        int low = 0;
+        int high = arr.length - 1;
+
+        while (low <= high) {
+
+            int middle = low + (high - low) / 2;
+            int currentMiddleNumber = arr[middle];
+
+            if (currentMiddleNumber == number) {
+                high = middle - 1;
+                searchedIndex = middle;
+            } else if (currentMiddleNumber > number) {
+                high = middle - 1;
+            } else if (currentMiddleNumber < number) {
+                low = middle + 1;
+            }
+        }
+
+        if (searchedIndex == -1) {
+            return low;
+        }
+
+        return searchedIndex;
+    }
 }
